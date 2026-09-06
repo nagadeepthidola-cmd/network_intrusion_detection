@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import joblib
 import pandas as pd
 
 app = Flask(__name__)
 CORS(app)
+
 
 # Load model
 model = joblib.load("network_intrusion_model.pkl")
@@ -16,11 +17,13 @@ model_features = joblib.load("model_features.pkl")
 best_threshold = joblib.load("best_threshold.pkl")
 
 
+# Homepage
 @app.route("/")
 def home():
-    return "Network Intrusion Detection System API is Running!"
+    return render_template("index.html")
 
 
+# Prediction API
 @app.route("/predict", methods=["POST"])
 def predict():
 
@@ -37,6 +40,7 @@ def predict():
     input_data["duration"] = data.get("duration", 0)
     input_data["src_bytes"] = data.get("src_bytes", 0)
     input_data["dst_bytes"] = data.get("dst_bytes", 0)
+
 
     # Protocol encoding
     protocol = data.get("protocol", "")
@@ -68,6 +72,7 @@ def predict():
     # Prediction probability
     probability = model.predict_proba(input_data)[0][1]
 
+
     # Apply threshold
     prediction = 1 if probability >= best_threshold else 0
 
@@ -81,7 +86,7 @@ def predict():
     return jsonify({
         "prediction": result,
         "attack_probability": round(float(probability) * 100, 2),
-        "threshold": best_threshold
+        "threshold": float(best_threshold)
     })
 
 
