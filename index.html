@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Network Intrusion Detection System</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            🛡️ NIDS
+        </div>
+
+        <nav>
+            <a href="#" class="active">🏠 Dashboard</a>
+            <a href="#prediction">🔍 Detection</a>
+            <a href="#history">📋 History</a>
+            <a href="#statistics">📊 Statistics</a>
+            <a href="#about">ℹ️ About</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <p>Machine Learning Project</p>
+            <small>NSL-KDD Dataset</small>
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header>
+
+            <div>
+                <h1>Network Intrusion Detection System</h1>
+                <p>AI-Powered Network Security Monitoring</p>
+            </div>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                System Online
+            </div>
+
+        </header>
+
+
+        <!-- Statistics Cards -->
+        <section class="stats" id="statistics">
+
+            <div class="card">
+
+                <div class="card-icon">🎯</div>
+
+                <div>
+                    <h3>Model Accuracy</h3>
+                    <h2>87.83%</h2>
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">📡</div>
+
+                <div>
+                    <h3>Total Records</h3>
+                    <h2>148,517</h2>
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-icon">🛡️</div>
+
+                <div>
+                    <h3>Model</h3>
+                    <h2>Gradient Boosting</h2>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Prediction Section -->
+        <section class="prediction-section" id="prediction">
+
+            <div class="section-title">
+
+                <h2>🔍 Intrusion Detection</h2>
+
+                <p>
+                    Enter network connection details to detect
+                    potential attacks.
+                </p>
+
+            </div>
+
+
+            <div class="form-container">
+
+                <div class="form-group">
+
+                    <label>Protocol Type</label>
+
+                    <select id="protocol">
+
+                        <option value="tcp">TCP</option>
+                        <option value="udp">UDP</option>
+                        <option value="icmp">ICMP</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Service</label>
+
+                    <select id="service">
+
+                        <option value="http">HTTP</option>
+                        <option value="ftp">FTP</option>
+                        <option value="smtp">SMTP</option>
+                        <option value="dns">DNS</option>
+                        <option value="private">Private</option>
+                        <option value="other">Other</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Connection Flag</label>
+
+                    <select id="flag">
+
+                        <option value="SF">SF</option>
+                        <option value="S0">S0</option>
+                        <option value="REJ">REJ</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Source Bytes</label>
+
+                    <input
+                        type="number"
+                        id="src_bytes"
+                        placeholder="Enter source bytes"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Destination Bytes</label>
+
+                    <input
+                        type="number"
+                        id="dst_bytes"
+                        placeholder="Enter destination bytes"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Connection Duration</label>
+
+                    <input
+                        type="number"
+                        id="duration"
+                        placeholder="Enter duration"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button class="predict-btn" onclick="predictAttack()">
+
+                🔍 Analyze Network Traffic
+
+            </button>
+
+
+            <!-- Prediction Result -->
+            <div id="result" class="result-box">
+
+                <h2>Waiting for Analysis...</h2>
+
+                <p>
+                    Enter network information and click Analyze.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Detection History -->
+        <section class="history-section" id="history">
+
+            <div class="section-title">
+
+                <h2>📋 Detection History</h2>
+
+                <p>
+                    Recent network traffic analysis results.
+                </p>
+
+            </div>
+
+
+            <div class="history-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Time</th>
+                            <th>Protocol</th>
+                            <th>Service</th>
+                            <th>Prediction</th>
+                            <th>Attack Probability</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="history-body">
+
+                        <tr id="empty-history">
+
+                            <td colspan="5">
+                                No detections yet.
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- About Section -->
+        <section class="about-section" id="about">
+
+            <h2>About This System</h2>
+
+            <p>
+
+                This Network Intrusion Detection System uses
+                Machine Learning to analyze network traffic
+                and identify potential malicious activity.
+
+            </p>
+
+
+            <div class="dataset-info">
+
+                <div>
+
+                    <strong>Dataset</strong>
+
+                    <span>NSL-KDD</span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>Best Algorithm</strong>
+
+                    <span>Improved Gradient Boosting</span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>Detection Type</strong>
+
+                    <span>Normal / Attack</span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Footer -->
+        <footer>
+
+            <p>
+
+                © 2026 Network Intrusion Detection System |
+                Machine Learning Project
+
+            </p>
+
+        </footer>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
