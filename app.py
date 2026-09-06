@@ -3,8 +3,12 @@ from flask_cors import CORS
 import joblib
 import pandas as pd
 
-app = Flask(__name__)
-CORS(app)
+app = Flask(
+    __name__,
+    template_folder=".",
+    static_folder=".",
+    static_url_path=""
+)
 
 
 # Load model
