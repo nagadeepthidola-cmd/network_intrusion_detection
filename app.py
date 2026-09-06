@@ -27,67 +27,78 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
 
-    data = request.json
+    try:
 
-    # Create empty input with all required features
-    input_data = pd.DataFrame(
-        0,
-        index=[0],
-        columns=model_features
-    )
+        # Get data
+        data = request.get_json()
 
-    # Numerical features
-    input_data["duration"] = data.get("duration", 0)
-    input_data["src_bytes"] = data.get("src_bytes", 0)
-    input_data["dst_bytes"] = data.get("dst_bytes", 0)
+        print("Received data:", data)
 
 
-    # Protocol encoding
-    protocol = data.get("protocol", "")
-
-    protocol_column = f"protocol_type_{protocol}"
-
-    if protocol_column in input_data.columns:
-        input_data[protocol_column] = 1
-
-
-    # Service encoding
-    service = data.get("service", "")
-
-    service_column = f"service_{service}"
-
-    if service_column in input_data.columns:
-        input_data[service_column] = 1
+        # Create empty input with all required features
+        input_data = pd.DataFrame(
+            0,
+            index=[0],
+            columns=model_features
+        )
 
 
-    # Flag encoding
-    flag = data.get("flag", "")
-
-    flag_column = f"flag_{flag}"
-
-    if flag_column in input_data.columns:
-        input_data[flag_column] = 1
+        # Numerical features
+        input_data["duration"] = data.get("duration", 0)
+        input_data["src_bytes"] = data.get("src_bytes", 0)
+        input_data["dst_bytes"] = data.get("dst_bytes", 0)
 
 
-    # Prediction probability
-    probability = model.predict_proba(input_data)[0][1]
+        # Protocol encoding
+        protocol = data.get("protocol", "")
+        protocol_column = f"protocol_type_{protocol}"
+
+        if protocol_column in input_data.columns:
+            input_data[protocol_column] = 1
 
 
-    # Apply threshold
-    prediction = 1 if probability >= best_threshold else 0
+        # Service encoding
+        service = data.get("service", "")
+        service_column = f"service_{service}"
+
+        if service_column in input_data.columns:
+            input_data[service_column] = 1
 
 
-    if prediction == 1:
-        result = "Attack Detected"
-    else:
-        result = "Normal Traffic"
+        # Flag encoding
+        flag = data.get("flag", "")
+        flag_column = f"flag_{flag}"
+
+        if flag_column in input_data.columns:
+            input_data[flag_column] = 1
 
 
-    return jsonify({
-        "prediction": result,
-        "attack_probability": round(float(probability) * 100, 2),
-        "threshold": float(best_threshold)
-    })
+        # Prediction probability
+        probability = model.predict_proba(input_data)[0][1]
+
+
+        # Apply threshold
+        prediction = (
+            "Attack Detected"
+            if probability >= float(best_threshold)
+            else "Normal Traffic"
+        )
+
+
+        return jsonify({
+            "prediction": prediction,
+            "attack_probability": round(float(probability) * 100, 2),
+            "threshold": float(best_threshold)
+        })
+
+
+    except Exception as e:
+
+        print("PREDICTION ERROR:", str(e))
+
+        return jsonify({
+            "error": str(e)
+        }), 500
 
 
 if __name__ == "__main__":
